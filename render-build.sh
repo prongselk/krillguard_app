@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 
-# Install system dependencies
-apt-get update && apt-get install -y \
+# Update package lists
+apt-get update 
+
+# Install system dependencies required for ipopt and cyipopt
+apt-get install -y \
     pkg-config \
     libipopt-dev \
+    libblas-dev \
+    liblapack-dev \
+    gfortran \
     build-essential \
     python3-dev
 
