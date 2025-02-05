@@ -1,11 +1,4 @@
-!pip install basemap
-!pip install dash
-!pip install flask-ngrok
-
 import os
-
-
-
 import plotly.express as px
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -14,9 +7,9 @@ import numpy as np
 from mpl_toolkits.basemap import Basemap
 import dash
 from dash import dcc, html, Input, Output, State, ALL
-from flask_ngrok import run_with_ngrok
 
-pip freeze > requirements.txt
+
+
 
 raw_url = "https://raw.githubusercontent.com/prongselk/krillguard/main/KrillGUARD_public.xlsx"
 data = pd.read_excel(raw_url, sheet_name="Raw_Data")
@@ -42,8 +35,6 @@ fig = px.scatter_geo(data, lat='Lat', lon='Long',
                      color_discrete_sequence=px.colors.qualitative.Set2)
 
 fig.update_layout(geo=dict(bgcolor='#e4f7fb'))
-fig.show()
-pio.write_html(fig, file='expeditions_map.html', auto_open=True)
 
 def fix_species(row):
     if row['Species'] == "Unknown" and row['Genus'] != "Unknown":
@@ -81,7 +72,7 @@ for genus in non_unknown_genera:
 
 
 app = dash.Dash(__name__)
-run_with_ngrok(app.server)
+server = app.server
 
 app.layout = html.Div(style={'display': 'flex'}, children=[
     html.Div(style={'width': '20%', 'padding': '50px', 'backgroundColor': '#f8f8f8'}, children=[
@@ -163,11 +154,7 @@ def update_map(list_of_values):
     return fig
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8051))
-    app.run_server(host='0.0.0.0', port=port)
-
-!jupyter nbconvert --to script krillguard_map_app.ipynb
+    app.run_server(debug=False, host='0.0.0.0', port=8080)
 
 
-!ls
 
