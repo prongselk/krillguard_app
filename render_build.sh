@@ -13,8 +13,9 @@ export PATH="$HOME/miniconda/bin:$PATH"
 
 # Initialize Conda
 echo "Initializing Conda..."
-source $HOME/miniconda/etc/profile.d/conda.sh
-conda init
+export PATH="$HOME/miniconda/bin:$PATH"
+source $HOME/miniconda/etc/profile.d/conda.sh || true 
+conda init || true 
 
 # Create and activate a new Conda environment
 echo "Creating Conda environment..."
