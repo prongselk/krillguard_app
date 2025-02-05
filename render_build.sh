@@ -10,5 +10,9 @@ conda create -n myenv python=3.9 -y
 conda activate myenv
 conda install -c conda-forge basemap -y
 
+# Install Gunicorn inside Conda
+conda install -n myenv -c conda-forge gunicorn -y
+
+
 # Install pip dependencies
 pip install -r requirements.txt
