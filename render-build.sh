@@ -11,13 +11,18 @@ apt-get install -y \
     liblapack-dev \
     gfortran \
     build-essential \
-    python3-dev
+    python3-dev \
+    python3-pip \
+    python3-venv
 
-# Set PKG_CONFIG_PATH to help pip find ipopt
-export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+# Set PKG_CONFIG_PATH so pip can find ipopt
+export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
 
-# Upgrade pip
-pip install --upgrade pip
+# Upgrade pip and setuptools
+pip install --upgrade pip setuptools
 
-# Install Python dependencies
+# Install cyipopt separately to ensure it finds ipopt
+pip install --no-cache-dir --use-pep517 cyipopt
+
+# Install all other Python dependencies
 pip install --no-cache-dir -r requirements.txt
