@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           chmod +x render_build.sh  # Ensure script is executable
-          ./render-build.sh
+          ./render_build.sh
 
       - name: Debug - List files
         run: ls -la
