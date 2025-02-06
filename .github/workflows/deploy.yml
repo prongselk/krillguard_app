@@ -28,19 +28,21 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Install non-pip dependencies
+      - name: Install non-pip dependencies (Conda & Basemap)
         shell: bash
         run: |
           chmod +x render_build.sh  # Ensure script is executable
-          ./render_build.sh
+          ./render_build.sh  # Run Conda installation script
 
       - name: Debug - List files
         run: ls -la
 
-      - name: Run Makefile files
+      - name: Run app manually inside Conda environment
+        shell: bash
         run: |
-          make clean_dirs
-          make run_app
+          source $HOME/miniconda/etc/profile.d/conda.sh  # Initialize Conda
+          conda activate myenv  # Activate Conda environment
+          python app.py  # Run the app inside Conda
 
       - name: Upload Artifact
         if: github.ref == 'refs/heads/main'
