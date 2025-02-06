@@ -1,17 +1,17 @@
 #!/bin/bash
-set -e  # Exit script if any command fails
+set -e  # Exit on error
 
 echo "Initializing Conda..."
-export PATH="$HOME/miniconda/bin:$PATH"
-source $HOME/miniconda/etc/profile.d/conda.sh || true
-conda init bash
+export PATH="/usr/share/miniconda/bin:$PATH"  # Use system-installed Conda
+source /usr/share/miniconda/etc/profile.d/conda.sh  # Initialize Conda
+conda init bash  # Ensure Conda is properly initialized
 
 echo "Creating Conda environment..."
 conda create -n myenv python=3.9 -y
 
-# Reinitialize Conda environment
-echo "Reinitializing Conda..."
-source $HOME/miniconda/etc/profile.d/conda.sh
+# Activate the Conda environment
+echo "Activating Conda environment..."
+source /usr/share/miniconda/etc/profile.d/conda.sh
 conda activate myenv
 
 echo "Installing Conda dependencies..."
