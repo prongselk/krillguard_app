@@ -1,37 +1,51 @@
 import os
+import sys
 import plotly.express as px
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.io as pio
 import numpy as np
-from mpl_toolkits.basemap import Basemap
 import dash
 from dash import dcc, html, Input, Output, State, ALL
 
+# Ensure Conda is activated and Basemap is available
+def check_conda():
+    conda_env = os.environ.get('CONDA_DEFAULT_ENV', None)
+    if conda_env != 'myenv':
+        print(f"Warning: The script is not running inside the expected Conda environment ('myenv').")
+        print("Attempting to activate Conda environment...")
+        os.system("source $HOME/miniconda/etc/profile.d/conda.sh && conda activate myenv")
 
+# Check and activate Conda before importing Basemap
+check_conda()
 
+try:
+    from mpl_toolkits.basemap import Basemap
+except ImportError:
+    print("Error: Basemap is not installed or not accessible. Ensure you are running inside the correct Conda environment ('myenv').")
+    sys.exit(1)
 
+# Load dataset
 raw_url = "https://raw.githubusercontent.com/prongselk/krillguard/main/KrillGUARD_public.xlsx"
 data = pd.read_excel(raw_url, sheet_name="Raw_Data")
 data = data.truncate(before=6)
 data = data.dropna(how='all')
-
 data = data.dropna(subset=['Lat'])
 
 data['Species'] = data['Species'].fillna('Unknown')
 data['Genus'] = data['Genus'].fillna('Unknown')
 
 for column in data.columns:
-       if data[column].dtype == 'object':
-           if all(isinstance(x, str) for x in data[column] if pd.notna(x)):
-               data[column] = data[column].str.strip()
-           else:
-               print(f"Column '{column}' contains non-string values. Skipping .str.strip().")
+    if data[column].dtype == 'object':
+        if all(isinstance(x, str) for x in data[column] if pd.notna(x)):
+            data[column] = data[column].str.strip()
+        else:
+            print(f"Column '{column}' contains non-string values. Skipping .str.strip().")
 
 fig = px.scatter_geo(data, lat='Lat', lon='Long',
                      hover_name='Station',
-                     hover_data = ['Station', 'Date', 'Gear', 'Species'],
-                     color = 'Expedition', opacity = 0.5,
+                     hover_data=['Station', 'Date', 'Gear', 'Species'],
+                     color='Expedition', opacity=0.5,
                      color_discrete_sequence=px.colors.qualitative.Set2)
 
 fig.update_layout(geo=dict(bgcolor='#e4f7fb'))
@@ -48,28 +62,24 @@ for genus, group in data.groupby('Genus'):
     species_list = sorted(group['Species'].unique().tolist())
     grouped_species[genus] = species_list
 
-
 non_unknown_genera = sorted([g for g in grouped_species.keys() if g != "Unknown"])
 if "Unknown" in grouped_species:
     non_unknown_genera.append("Unknown")
-
 
 species_checklist_layout = []
 for genus in non_unknown_genera:
     species_checklist_layout.append(
         html.Details([
-            html.Summary(genus, style={'cursor': 'pointer', 'fontSize': '14px','font-family': 'Helvetica'}),
+            html.Summary(genus, style={'cursor': 'pointer', 'fontSize': '14px', 'font-family': 'Helvetica'}),
             dcc.Checklist(
                 id={'type': 'species-checklist', 'index': genus},
                 options=[{'label': species, 'value': species} for species in grouped_species[genus]],
-
                 value=grouped_species[genus],
                 style={'fontSize': '12px', 'lineHeight': '1.5', 'fontStyle': 'italic'},
                 inputStyle={"margin-right": "5px"}
             )
         ], open=False)
     )
-
 
 app = dash.Dash(__name__)
 server = app.server
@@ -90,19 +100,17 @@ app.layout = html.Div(style={'display': 'flex'}, children=[
             style={'marginBottom': '10px', 'fontSize': '12px'}
         ),
         html.Div(species_checklist_layout),
-
-
     ]),
 
     html.Div(style={'width': '80%'}, children=[
         html.H1("Discovery Expeditions: Krill Station Data from the IOS Collection",
                 style={'textAlign': 'center',
-                       'fontSize':'16px',
-                       'font-family':'Helvetica'}),
+                       'fontSize': '16px',
+                       'font-family': 'Helvetica'}),
         html.H2("Click on legend to select expeditions, hover over points to see details",
-               style={'textAlign':'right',
-                      'fontSize':'12px',
-                      'font-family':'Helvetica',
+               style={'textAlign': 'right',
+                      'fontSize': '12px',
+                      'font-family': 'Helvetica',
                       'fontWeight': 'normal',
                       'marginLeft': '20px',
                       'marginBottom': '5px'}),
@@ -119,7 +127,6 @@ app.layout = html.Div(style={'display': 'flex'}, children=[
 def update_checklists(deselect_clicks, select_clicks, options_list):
     ctx = dash.callback_context
     if not ctx.triggered:
-
         return [[opt['value'] for opt in options] for options in options_list]
 
     triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
@@ -130,13 +137,11 @@ def update_checklists(deselect_clicks, select_clicks, options_list):
 
     return dash.no_update
 
-
 @app.callback(
     Output('map-graph', 'figure'),
     Input({'type': 'species-checklist', 'index': ALL}, 'value')
 )
 def update_map(list_of_values):
-
     selected_species = [species for sublist in list_of_values for species in sublist]
     filtered_data = data[data['Species'].isin(selected_species)]
 
@@ -155,6 +160,3 @@ def update_map(list_of_values):
 
 if __name__ == '__main__':
     app.run_server(debug=False, host='0.0.0.0', port=8080)
-
-
-
