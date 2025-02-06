@@ -35,7 +35,7 @@ jobs:
       - name: Run app manually inside Conda environment
         shell: bash
         run: |
-          source $HOME/miniconda/etc/profile.d/conda.sh  # Initialize Conda
+          source /usr/share/miniconda/etc/profile.d/conda.sh  # Initialize Conda
           conda activate myenv  # Activate Conda environment
           python app.py  # Run the app inside Conda
 
