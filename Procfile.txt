@@ -1,1 +1,1 @@
-web: gunicorn krillguard_app:server
+web: gunicorn app:server
