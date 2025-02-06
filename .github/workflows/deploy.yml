@@ -31,7 +31,7 @@ jobs:
       - name: Install non-pip dependencies
         shell: bash
         run: |
-          chmod +x render-build.sh  # Ensure script is executable
+          chmod +x render_build.sh  # Ensure script is executable
           ./render-build.sh
 
       - name: Debug - List files
