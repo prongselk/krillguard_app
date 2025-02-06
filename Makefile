@@ -1,5 +1,8 @@
 run_app:
-	python3 app.py & sleep 30
+	@echo "Starting Dash app with Gunicorn..."
+	bash -c "source /usr/share/miniconda/etc/profile.d/conda.sh && \
+	conda activate myenv && \
+	gunicorn --bind 0.0.0.0:8080 app:server"
 
 	wget -r http://127.0.0.1:8050/
 	wget -r http://127.0.0.1:8050/_dash-layout 
