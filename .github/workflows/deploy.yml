@@ -37,7 +37,7 @@ jobs:
         run: |
           source /usr/share/miniconda/etc/profile.d/conda.sh  # Initialize Conda
           conda activate myenv  # Activate Conda environment
-          python app.py  # Run the app inside Conda
+          gunicorn --bind 0.0.0.0:8080 app:server
 
       - name: Upload Artifact
         if: github.ref == 'refs/heads/main'
