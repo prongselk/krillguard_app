@@ -1,8 +1,8 @@
 run_app:
-    bash -c 'source /usr/share/miniconda/etc/profile.d/conda.sh && \
-    conda activate myenv && \
-    gunicorn --bind 0.0.0.0:8050 app:server & sleep 5 && \
-    while ! nc -z 127.0.0.1 8050; do sleep 1; done'
+	bash -c 'source /usr/share/miniconda/etc/profile.d/conda.sh && \
+	conda activate myenv && \
+	gunicorn --bind 0.0.0.0:8050 app:server & sleep 5 && \
+	while ! nc -z 127.0.0.1 8050; do sleep 1; done'
 
 	sleep 10
 
