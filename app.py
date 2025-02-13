@@ -70,7 +70,7 @@ st.markdown(
     """
     <div style="display: flex; justify-content: center; margin-top: 20px;">
         <a href="https://o-william-white.github.io/" target="_blank">
-            <button style="padding: 10px 20px; font-size: 16px; background-color: #007acc; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            <button style="padding: 10px 20px; font-size: 16px; background-color: #7d7fe0; color: white; border: none; border-radius: 5px; cursor: pointer;">
                 Back to Homepage
             </button>
         </a>
