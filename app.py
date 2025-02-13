@@ -10,8 +10,6 @@ def load_data():
     df = df.truncate(before=6).dropna(how='all').dropna(subset=['Lat'])
     df['Species'] = df['Species'].fillna('Unknown')
     df['Genus'] = df['Genus'].fillna('Unknown')
-    df['Species'] = df['Species'].replace("Euphasuia", "Euphausia")
-    df['Genus'] = df['Genus'].replace("Euphasuia", "Euphausia")
     return df
 
 data = load_data()
