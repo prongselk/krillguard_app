@@ -14,10 +14,10 @@ def load_data():
 
 data = load_data()
 
-# Fix species names (replace "Unknown" with "Genus sp.")
+#fix unknown species names 
 data['Species'] = data.apply(lambda row: f"{row['Genus']} sp." if row['Species'] == "Unknown" and row['Genus'] != "Unknown" else row['Species'], axis=1)
 
-# Sidebar for species selection
+#sidebar for species selection
 st.sidebar.title("Species Selection")
 genus_groups = data.groupby('Genus')['Species'].unique().to_dict()
 
@@ -27,24 +27,27 @@ for genus, species_list in genus_groups.items():
         species_selected = st.multiselect(f"Select species ({genus})", species_list, default=species_list)
         selected_species.extend(species_selected)
 
-# Filter data based on selection
 filtered_data = data[data['Species'].isin(selected_species)]
 
-# Create interactive map
+
 fig = px.scatter_geo(filtered_data, lat='Lat', lon='Long',
                      hover_name='Station',
                      hover_data=['Station', 'Date', 'Gear', 'Species'],
                      color='Expedition', opacity=0.8,
                      color_discrete_sequence=px.colors.qualitative.Set2)
 
-fig.update_layout(geo=dict(bgcolor='#e4f7fb'))
+fig.update_layout(
+    geo=dict(
+        showland = True,
+        landcolor = "white",
+        showocean = True,
+        oceancolor = "#e4f7fb",
+        bgcolor='#e4f7fb'))
 
-# Display map
 st.title("Krill Station Data - Discovery Expeditions")
-st.write("Click on the legend to filter by expedition. Hover over points for details.")
+st.write("Click on the legend to filter by expedition. Open the side menu on the left to filter by species. Hover over points for details. ")
 st.plotly_chart(fig)
 
-# Select/Deselect all button
 if st.sidebar.button("Deselect All"):
     st.session_state['selected_species'] = []
 
