@@ -13,6 +13,7 @@ def load_data():
     return df
 
 data = load_data()
+data.replace("Euphasuia", "Euphausia", inplace=True)
 
 #fix unknown species names 
 data['Species'] = data.apply(lambda row: f"{row['Genus']} sp." if row['Species'] == "Unknown" and row['Genus'] != "Unknown" else row['Species'], axis=1)
