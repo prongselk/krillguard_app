@@ -12,12 +12,11 @@ def load_data():
     df = df.truncate(before=6).dropna(how='all').dropna(subset=['Lat'])
     df['Species'] = df['Species'].fillna('Unknown')
     df['Genus'] = df['Genus'].fillna('Unknown')
+    df['Species'] = df.apply(lambda row: f"{row['Genus']} sp." if row['Species'] == "Unknown" and row['Genus'] != "Unknown" else row['Species'], axis=1)
     return df
 
 data = load_data()
 
-#fix unknown species names 
-data['Species'] = data.apply(lambda row: f"{row['Genus']} sp." if row['Species'] == "Unknown" and row['Genus'] != "Unknown" else row['Species'], axis=1)
 
 #sidebar for species selection
 st.sidebar.title("Species Selection")
