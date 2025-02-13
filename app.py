@@ -21,13 +21,22 @@ data['Species'] = data.apply(lambda row: f"{row['Genus']} sp." if row['Species']
 st.sidebar.title("Species Selection")
 genus_groups = data.groupby('Genus')['Species'].unique().to_dict()
 
+# Initialize session state if not set
+if "selected_species" not in st.session_state:
+    st.session_state.selected_species = sum(genus_groups.values(), [])
+
+# Multi-select widget for species filtering
 selected_species = []
 for genus, species_list in genus_groups.items():
-    with st.sidebar.expander(genus):
-        species_selected = st.multiselect(f"Select species ({genus})", species_list, default=species_list)
-        selected_species.extend(species_selected)
+    with st.sidebar.expander(genus, expanded=False):
+        selected = st.multiselect(f"Select species ({genus})", species_list, default=st.session_state.selected_species)
+        selected_species.extend(selected)
 
-filtered_data = data[data['Species'].isin(selected_species)]
+# Update session state with the selected species
+st.session_state.selected_species = selected_species
+
+# Filter data based on selected species
+filtered_data = data[data['Species'].isin(st.session_state.selected_species)]
 
 
 fig = px.scatter_geo(filtered_data, lat='Lat', lon='Long',
