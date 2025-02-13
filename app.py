@@ -44,7 +44,7 @@ fig.update_layout(
         oceancolor = "#e4f7fb",
         bgcolor='#e4f7fb'))
 
-st.title("Krill Station Data - Discovery Expeditions")
+st.markdown("<h1 style='text-align: center; font-size: 30px;'>Krill Station Data - Discovery Expeditions</h1>", unsafe_allow_html=True)
 st.write("Click on the legend to filter by expedition. Open the side menu on the left to filter by species. Hover over points for details. ")
 st.plotly_chart(fig)
 
