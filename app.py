@@ -36,7 +36,7 @@ for genus, species_list in genus_groups.items():
 
 
 # Update session state with the selected species
-st.session_state.selected_species = selected_species
+st.session_state.selected_species = [species for species_list in genus_groups.values() for species in species_list]  
 
 # Filter data based on selected species
 filtered_data = data[data['Species'].isin(st.session_state.selected_species)]
