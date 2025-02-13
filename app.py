@@ -25,7 +25,8 @@ genus_groups = data.groupby('Genus')['Species'].unique().to_dict()
 
 # Initialize session state if not set
 if "selected_species" not in st.session_state:
-    st.session_state.selected_species = sum(genus_groups.values(), [])
+    st.session_state.selected_species = [species for species_list in genus_groups.values() for species in list(species_list)]
+
 
 # Multi-select widget for species filtering
 selected_species = []
