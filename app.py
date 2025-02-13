@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-
 st.cache_data.clear()
 
 @st.cache_data
@@ -17,34 +16,29 @@ def load_data():
 
 data = load_data()
 
-
 #sidebar for species selection
 st.sidebar.title("Species Selection")
-genus_groups = data.groupby('Genus')['Species'].unique().to_dict()
+genus_groups = {genus: list(species_list) for genus, species_list in data.groupby('Genus')['Species'].unique().items()}  
 
 valid_species = [species for species_list in genus_groups.values() for species in species_list] 
 
 if "selected_species" not in st.session_state:
     st.session_state.selected_species = valid_species  
 
-# Multi-select widget for species filtering
 selected_species = []
 for genus, species_list in genus_groups.items():
     with st.sidebar.expander(genus, expanded=False):
         selected = st.multiselect(
             f"Select species ({genus})",
             options=species_list,  
-            default=species_list  
+            default=[species for species in species_list if species in st.session_state.selected_species]  
         )
         selected_species.extend(selected)
 
+if set(selected_species) != set(st.session_state.selected_species):
+    st.session_state.selected_species = selected_species  
 
-# Update session state with the selected species
-st.session_state.selected_species = [species for species_list in genus_groups.values() for species in species_list]  
-
-# Filter data based on selected species
 filtered_data = data[data['Species'].isin(st.session_state.selected_species)]
-
 
 fig = px.scatter_geo(filtered_data, lat='Lat', lon='Long',
                      hover_name='Station',
@@ -68,4 +62,4 @@ if st.sidebar.button("Deselect All"):
     st.session_state['selected_species'] = []
 
 if st.sidebar.button("Select All"):
-    st.session_state['selected_species'] = [species for species_list in genus_groups.values() for species in species_list]
+    st.session_state['selected_species'] = valid_species
