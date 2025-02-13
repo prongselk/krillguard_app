@@ -8,23 +8,6 @@ import numpy as np
 import dash
 from dash import dcc, html, Input, Output, State, ALL
 
-# Ensure Conda is activated and Basemap is available
-def check_conda():
-    conda_env = os.environ.get('CONDA_DEFAULT_ENV', None)
-    if conda_env != 'myenv':
-        print(f"Warning: The script is not running inside the expected Conda environment ('myenv').")
-        print("Attempting to activate Conda environment...")
-        os.system("source $HOME/miniconda/etc/profile.d/conda.sh && conda activate myenv")
-
-# Check and activate Conda before importing Basemap
-check_conda()
-
-try:
-    from mpl_toolkits.basemap import Basemap
-except ImportError:
-    print("Error: Basemap is not installed or not accessible. Ensure you are running inside the correct Conda environment ('myenv').")
-    sys.exit(1)
-
 # Load dataset
 raw_url = "https://raw.githubusercontent.com/prongselk/krillguard/main/KrillGUARD_public.xlsx"
 data = pd.read_excel(raw_url, sheet_name="Raw_Data")
