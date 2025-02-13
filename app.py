@@ -23,15 +23,21 @@ st.sidebar.title("Species Selection")
 genus_groups = data.groupby('Genus')['Species'].unique().to_dict()
 
 # Initialize session state if not set
-if "selected_species" not in st.session_state:
-    st.session_state.selected_species = [species for species_list in genus_groups.values() for species in list(species_list)]
+#if "selected_species" not in st.session_state:
+#    st.session_state.selected_species = [species for species_list in genus_groups.values() for species in list(species_list)]
 
+if "selected_species" not in st.session_state:
+    st.session_state.selected_species = valid_species  # Default to all species
 
 # Multi-select widget for species filtering
 selected_species = []
 for genus, species_list in genus_groups.items():
     with st.sidebar.expander(genus, expanded=False):
-        selected = st.multiselect(f"Select species ({genus})", species_list, default=st.session_state.selected_species)
+        selected = st.multiselect(
+            f"Select species ({genus})",
+            options=species_list,  # Only valid options
+            default=species_list  # Default to all species in the genus
+        )
         selected_species.extend(selected)
 
 
