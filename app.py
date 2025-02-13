@@ -67,6 +67,14 @@ if st.sidebar.button("Select All"):
 
 
 st.markdown(
-    "<a href='https://o-william-white.github.io/' target='_blank' style='text-decoration: none;'><button style='padding:10px 20px; font-size:16px;'>Back to Homepage</button></a>",
+    """
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <a href="https://o-william-white.github.io/" target="_blank">
+            <button style="padding: 10px 20px; font-size: 16px; background-color: #007acc; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Back to Homepage
+            </button>
+        </a>
+    </div>
+    """,
     unsafe_allow_html=True
 )
