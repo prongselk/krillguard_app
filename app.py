@@ -63,3 +63,10 @@ if st.sidebar.button("Deselect All"):
 
 if st.sidebar.button("Select All"):
     st.session_state['selected_species'] = valid_species
+
+
+
+st.markdown(
+    "<a href='https://o-william-white.github.io/' target='_blank' style='text-decoration: none;'><button style='padding:10px 20px; font-size:16px;'>Back to Homepage</button></a>",
+    unsafe_allow_html=True
+)
