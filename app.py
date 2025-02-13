@@ -33,9 +33,6 @@ for genus, species_list in genus_groups.items():
         selected = st.multiselect(f"Select species ({genus})", species_list, default=st.session_state.selected_species)
         selected_species.extend(selected)
 
-valid_species = sum(genus_groups.values(), [])  # Flatten list of all species
-st.session_state.selected_species = [species for species in st.session_state.selected_species if species in valid_species]
-
 
 # Update session state with the selected species
 st.session_state.selected_species = selected_species
