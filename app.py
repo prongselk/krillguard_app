@@ -10,10 +10,11 @@ def load_data():
     df = df.truncate(before=6).dropna(how='all').dropna(subset=['Lat'])
     df['Species'] = df['Species'].fillna('Unknown')
     df['Genus'] = df['Genus'].fillna('Unknown')
+    df['Species'] = df['Species'].replace("Euphasuia", "Euphausia")
+    df['Genus'] = df['Genus'].replace("Euphasuia", "Euphausia")
     return df
 
 data = load_data()
-data.replace("Euphasuia", "Euphausia", inplace=True)
 
 #fix unknown species names 
 data['Species'] = data.apply(lambda row: f"{row['Genus']} sp." if row['Species'] == "Unknown" and row['Genus'] != "Unknown" else row['Species'], axis=1)
