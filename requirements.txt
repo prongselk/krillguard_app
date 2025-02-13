@@ -1,8 +1,0 @@
-dash
-flask
-pandas
-numpy
-plotly
-gunicorn
-matplotlib
-
