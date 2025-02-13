@@ -2,7 +2,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# Load dataset
+
+st.cache_data.clear()
+
 @st.cache_data
 def load_data():
     url = "https://raw.githubusercontent.com/prongselk/krillguard/main/KrillGUARD_public.xlsx"
