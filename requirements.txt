@@ -3,6 +3,5 @@ pandas
 plotly
 openpyxl
 matplotlib
-os
 sys
 dash
