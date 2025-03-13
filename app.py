@@ -119,7 +119,7 @@ if st.sidebar.button("Select All Species"):
 
 
 if st.sidebar.button("Deselect All Years"):
-st.session_state['selected_years'] = []
+    st.session_state['selected_years'] = []
 
 if st.sidebar.button("Select All Years"):
     st.session_state['selected_years'] = valid_years
