@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import numpy as np
 
 st.cache_data.clear()
 
@@ -12,9 +13,34 @@ def load_data():
     df['Species'] = df['Species'].fillna('Unknown')
     df['Genus'] = df['Genus'].fillna('Unknown')
     df['Species'] = df.apply(lambda row: f"{row['Genus']} sp." if row['Species'] == "Unknown" and row['Genus'] != "Unknown" else row['Species'], axis=1)
+    
+    
+    
     return df
 
+
+def convert_date(date):
+    try:
+        if str(date).isdigit():  
+            return pd.to_datetime(int(date), origin='1899-12-30', unit='D')
+        elif '-' in str(date):  
+            return pd.to_datetime(date, format='%Y-%m-%d', errors='coerce')
+    except:
+        return np.nan  
+    return np.nan
+
+
+def fix_dates(data):
+    data['correct_date'] = data['Date'].apply(convert_date)
+    data['year'] = data['correct_date'].dt.year
+    data['decade'] = data['year'].apply(lambda x: f"{x // 10 * 10}s" if pd.notna(x) else np.nan)
+
+    return data
+
+
+
 data = load_data()
+data = fix_dates()
 
 #sidebar for species selection
 st.sidebar.title("Species Selection")
@@ -38,7 +64,34 @@ for genus, species_list in genus_groups.items():
 if set(selected_species) != set(st.session_state.selected_species):
     st.session_state.selected_species = selected_species  
 
-filtered_data = data[data['Species'].isin(st.session_state.selected_species)]
+
+
+#sidebar for year selection
+st.sidebar.title("Year Selection")
+decades = {decade: list(year_list) for decade, year_list in data.groupby('decade')['year'].unique().items()}  
+
+valid_years = [years for year_list in decades.values() for years in years_list] 
+
+if "selected_years" not in st.session_state:
+    st.session_state.selected_years = valid_years  
+
+selected_years = []
+for decade, years_list in decades.items():
+    with st.sidebar.expander(decade, expanded=False):
+        selected = st.multiselect(
+            f"Select years ({decade})",
+            options=years_list,  
+            default=[year for year in years_list if year in st.session_state.selected_years]  
+        )
+        selected_years.extend(selected)
+
+if set(selected_years) != set(st.session_state.selected_years):
+    st.session_state.selected_years = selected_years 
+
+
+
+
+filtered_data = data[(data['year'].isin(selected_years)) & (data['Species'].isin(selected_species))]
 
 fig = px.scatter_geo(filtered_data, lat='Lat', lon='Long',
                      hover_name='Station',
