@@ -42,6 +42,45 @@ def fix_dates(data):
 data = load_data()
 data = fix_dates(data)
 
+
+
+slider_css = """
+    <style>
+        /* Hide default slider thumb */
+        input[type="range"]::-webkit-slider-thumb {
+            visibility: hidden;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            visibility: hidden;
+        }
+
+        /* Positioning the custom image */
+        .slider-container {
+            position: relative;
+            height: 50px;
+        }
+
+        .custom-slider-thumb {
+            position: absolute;
+            top: -15px;
+            width: 40px;
+            height: 40px;
+            background-image: url('https://raw.githubusercontent.com/prongselk/krillguard_app/main/discovery.png'); /* Replace with your image */
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translateX(-50%);
+        }
+    </style>
+"""
+
+
+st.markdown(slider_css, unsafe_allow_html=True)
+
+
+
 #sidebar for species selection
 st.sidebar.title("Species Selection")
 genus_groups = {genus: list(species_list) for genus, species_list in data.groupby('Genus')['Species'].unique().items()}  
@@ -126,21 +165,6 @@ if st.sidebar.button("Select All Years"):
 
 
 
-st.markdown(
-    """
-    <div style="display: flex; justify-content: center; margin-top: 20px;">
-        <a href="https://o-william-white.github.io/" target="_blank">
-            <button style="padding: 10px 20px; font-size: 16px; background-color: #7d7fe0; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                Back to Homepage
-            </button>
-        </a>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-
-st.markdown("### Time Travel: Year Selection")
 min_year, max_year = int(data['year'].min()), int(data['year'].max())
 
 selected_slider_year = st.slider(
@@ -150,6 +174,33 @@ selected_slider_year = st.slider(
     value=min_year,  
     step=1
 )
+
+
+st.markdown(f"""
+    <div class="slider-container">
+        <div class="custom-slider-thumb" id="slider-thumb"></div>
+    </div>
+    <script>
+        // JavaScript to move the custom slider thumb
+        document.addEventListener('DOMContentLoaded', function () {{
+            let slider = document.querySelector('input[type="range"]');
+            let thumb = document.getElementById('slider-thumb');
+
+            function updateThumbPosition() {{
+                let percentage = (slider.value - {min_year}) / ({max_year} - {min_year}) * 100;
+                thumb.style.left = `calc({{percentage}}% + 5px)`;
+            }}
+
+            slider.addEventListener('input', updateThumbPosition);
+            updateThumbPosition();
+        }});
+    </script>
+""", unsafe_allow_html=True)
+
+
+
+
+
 
 filtered_data_slider = data[
     (data['year'] == selected_slider_year) & 
@@ -173,3 +224,18 @@ fig_slider.update_layout(
 
 
 st.plotly_chart(fig_slider)
+
+
+
+st.markdown(
+    """
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <a href="https://o-william-white.github.io/" target="_blank">
+            <button style="padding: 10px 20px; font-size: 16px; background-color: #7d7fe0; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Back to Homepage
+            </button>
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
