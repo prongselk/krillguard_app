@@ -164,7 +164,7 @@ fig_slider.add_trace(go.Scatter(
         size=40,
         symbol="circle",  
         color="rgba(255, 255, 255, 0)", 
-        line=dict(color="black", width=2),
+        line=dict(color="white", width=2),
     ),
     text=[f"Year: {selected_slider_year}"],
     hoverinfo="text",
@@ -188,9 +188,9 @@ fig_slider.add_layout_image(
 
 
 fig_slider.update_layout(
-    xaxis=dict(title="Year", tickmode="linear", range=[min_year - 2, max_year + 2]),
-    yaxis=dict(visible=False, range=[0, 2]),
-    margin=dict(l=20, r=20, t=20, b=20),
+    xaxis=dict(visible=False),
+    yaxis=dict(visible=False, range=[0, 1]),
+    margin=dict(l=0, r=0, t=0, b=0),
     plot_bgcolor="rgba(0,0,0,0)"
 )
 
