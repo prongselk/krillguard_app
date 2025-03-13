@@ -138,3 +138,38 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
+st.markdown("### Time Travel: Year Selection")
+min_year, max_year = int(data['year'].min()), int(data['year'].max())
+
+selected_slider_year = st.slider(
+    "Slide to focus on a single year:",
+    min_value=min_year,
+    max_value=max_year,
+    value=min_year,  
+    step=1
+)
+
+filtered_data_slider = data[
+    (data['year'] == selected_slider_year) & 
+    (data['Species'].isin(selected_species))
+]
+
+fig_slider = px.scatter_geo(filtered_data_slider, lat='Lat', lon='Long',
+                            hover_name='Station',
+                            hover_data=['Station', 'Date', 'Gear', 'Species'],
+                            color='Expedition', opacity=0.8,
+                            color_discrete_sequence=px.colors.qualitative.Set2)
+
+fig_slider.update_layout(
+    geo=dict(
+        showland=True,
+        landcolor="white",
+        showocean=True,
+        oceancolor="#e4f7fb",
+        bgcolor='#e4f7fb')
+)
+
+
+st.plotly_chart(fig_slider)
