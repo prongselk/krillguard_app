@@ -40,7 +40,7 @@ def fix_dates(data):
 
 
 data = load_data()
-data = fix_dates()
+data = fix_dates(data)
 
 #sidebar for species selection
 st.sidebar.title("Species Selection")
