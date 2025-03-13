@@ -45,8 +45,6 @@ data = fix_dates(data)
 
 
 
-st.markdown(slider_css, unsafe_allow_html=True)
-
 
 
 #sidebar for species selection
