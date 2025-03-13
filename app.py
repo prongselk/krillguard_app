@@ -68,9 +68,9 @@ if set(selected_species) != set(st.session_state.selected_species):
 
 #sidebar for year selection
 st.sidebar.title("Year Selection")
-decades = {decade: list(year_list) for decade, year_list in data.groupby('decade')['year'].unique().items()}  
+decades = {decade: list(years_list) for decade, years_list in data.groupby('decade')['year'].unique().items()}  
 
-valid_years = [years for year_list in decades.values() for years in years_list] 
+valid_years = [years for years_list in decades.values() for years in years_list] 
 
 if "selected_years" not in st.session_state:
     st.session_state.selected_years = valid_years  
