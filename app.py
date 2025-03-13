@@ -189,8 +189,9 @@ fig_slider.add_layout_image(
 
 fig_slider.update_layout(
     xaxis=dict(visible=False),
-    yaxis=dict(visible=False, range=[0, 1]),
+    yaxis=dict(visible=False, range=[0, 2]),
     margin=dict(l=0, r=0, t=0, b=0),
+    height = 100,
     plot_bgcolor="rgba(0,0,0,0)"
 )
 
