@@ -64,7 +64,11 @@ for genus, species_list in genus_groups.items():
 if set(selected_species) != set(st.session_state.selected_species):
     st.session_state.selected_species = selected_species  
 
+if st.sidebar.button("Deselect All Species"):
+    st.session_state['selected_species'] = []
 
+if st.sidebar.button("Select All Species"):
+    st.session_state['selected_species'] = valid_species
 
 #sidebar for year selection
 st.sidebar.title("Year Selection")
@@ -111,11 +115,7 @@ st.markdown("<h1 style='text-align: center; font-size: 30px;'>Krill Station Data
 st.write("Click on the legend to filter by expedition. Open the side menu on the left to filter by species (double click 'Select All' and 'Deselect All' buttons for them to work). Hover over points for details. ")
 st.plotly_chart(fig)
 
-if st.sidebar.button("Deselect All Species"):
-    st.session_state['selected_species'] = []
 
-if st.sidebar.button("Select All Species"):
-    st.session_state['selected_species'] = valid_species
 
 
 if st.sidebar.button("Deselect All Years"):
