@@ -111,11 +111,18 @@ st.markdown("<h1 style='text-align: center; font-size: 30px;'>Krill Station Data
 st.write("Click on the legend to filter by expedition. Open the side menu on the left to filter by species (double click 'Select All' and 'Deselect All' buttons for them to work). Hover over points for details. ")
 st.plotly_chart(fig)
 
-if st.sidebar.button("Deselect All"):
+if st.sidebar.button("Deselect All Species"):
     st.session_state['selected_species'] = []
 
-if st.sidebar.button("Select All"):
+if st.sidebar.button("Select All Species"):
     st.session_state['selected_species'] = valid_species
+
+
+if st.sidebar.button("Deselect All Years"):
+st.session_state['selected_years'] = []
+
+if st.sidebar.button("Select All Years"):
+    st.session_state['selected_years'] = valid_years
 
 
 
