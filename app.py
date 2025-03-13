@@ -162,7 +162,7 @@ fig_slider.add_trace(go.Scatter(
     mode="markers",
     marker=dict(
         size=40,
-        symbol="dot",  
+        symbol="circle",  
         color="rgba(0, 0, 0, 0)", 
         line=dict(color="rgba(0, 0, 0, 0)", width=0.1),
     ),
