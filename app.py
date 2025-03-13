@@ -179,7 +179,7 @@ fig_slider.add_layout_image(
         yref="y",
         x=selected_slider_year,
         y=1,
-        sizex=5,  
+        sizex=10,  
         sizey=1,  
         xanchor="center",
         yanchor="middle"
