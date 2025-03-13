@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import numpy as np
+import plotly.graph_objects as go
 
 st.cache_data.clear()
 
@@ -42,39 +43,6 @@ def fix_dates(data):
 data = load_data()
 data = fix_dates(data)
 
-
-
-slider_css = """
-    <style>
-        /* Hide default slider thumb */
-        input[type="range"]::-webkit-slider-thumb {
-            visibility: hidden;
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            visibility: hidden;
-        }
-
-        /* Positioning the custom image */
-        .slider-container {
-            position: relative;
-            height: 50px;
-        }
-
-        .custom-slider-thumb {
-            position: absolute;
-            top: -15px;
-            width: 40px;
-            height: 40px;
-            background-image: url('https://raw.githubusercontent.com/prongselk/krillguard_app/main/discovery.png'); /* Replace with your image */
-            background-size: cover;
-            background-position: center;
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translateX(-50%);
-        }
-    </style>
-"""
 
 
 st.markdown(slider_css, unsafe_allow_html=True)
@@ -176,27 +144,60 @@ selected_slider_year = st.slider(
 )
 
 
-st.markdown(f"""
-    <div class="slider-container">
-        <div class="custom-slider-thumb" id="slider-thumb"></div>
-    </div>
-    <script>
-        // JavaScript to move the custom slider thumb
-        document.addEventListener('DOMContentLoaded', function () {{
-            let slider = document.querySelector('input[type="range"]');
-            let thumb = document.getElementById('slider-thumb');
+year_range = list(range(min_year, max_year + 1))  
 
-            function updateThumbPosition() {{
-                let percentage = (slider.value - {min_year}) / ({max_year} - {min_year}) * 100;
-                thumb.style.left = `calc({{percentage}}% + 5px)`;
-            }}
+fig_slider = go.Figure()
 
-            slider.addEventListener('input', updateThumbPosition);
-            updateThumbPosition();
-        }});
-    </script>
-""", unsafe_allow_html=True)
 
+fig_slider.add_trace(go.Scatter(
+    x=year_range,
+    y=[1] * len(year_range),  
+    mode="lines",
+    line=dict(color="lightgray", width=2),
+    showlegend=False
+))
+
+
+fig_slider.add_trace(go.Scatter(
+    x=[selected_slider_year], 
+    y=[1], 
+    mode="markers",
+    marker=dict(
+        size=40,
+        symbol="circle",  
+        color="rgba(255, 255, 255, 0)", 
+        line=dict(color="black", width=2),
+    ),
+    text=[f"Year: {selected_slider_year}"],
+    hoverinfo="text",
+    showlegend=False
+))
+
+
+fig_slider.add_layout_image(
+    dict(
+        source="https://raw.githubusercontent.com/prongselk/krillguard_app/main/discovery.png", 
+        xref="x",
+        yref="y",
+        x=selected_slider_year,
+        y=1,
+        sizex=5,  
+        sizey=1,  
+        xanchor="center",
+        yanchor="middle"
+    )
+)
+
+
+fig_slider.update_layout(
+    xaxis=dict(title="Year", tickmode="linear", range=[min_year - 2, max_year + 2]),
+    yaxis=dict(visible=False, range=[0, 2]),
+    margin=dict(l=20, r=20, t=20, b=20),
+    plot_bgcolor="rgba(0,0,0,0)"
+)
+
+
+st.plotly_chart(fig_slider)
 
 
 
